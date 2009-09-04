@@ -246,3 +246,7 @@ td {
     color: #0063DC;
     text-decoration: none;
 }
+
+.matchHighlight {
+    background-color: yellow;
+}

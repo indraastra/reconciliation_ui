@@ -246,7 +246,11 @@ function renderCandidate(result, mqlProps, entity) {
          node("img",{src:freebase_url + "/api/trans/image_thumb/"+result['id']+"?maxwidth=100&maxheight=100"})
     ).appendTo(tableRow);
     
-    tableRow.append(node("td",displayValue(result)));
+    var inputName = textValue(entity);
+    var reconName = textValue(result);
+    var match = highlightStringMatch(inputName, reconName);
+
+    tableRow.append(node("td", match[1]));
     var displayTypes = [];
     $.each($.makeArray(result.type), function(_,typeId) {
         //types that end in /topic are uninteresting
@@ -326,3 +330,22 @@ function canonicalizeFreebaseId(entity) {
             entity.id = results.result.id
     });
 }
+
+function highlightStringMatch(string1, string2) {
+    var split_re = /\s+|,|\.|_|\//;
+    words1 = string1.split(split_re);
+    words2 = string2.split(split_re);
+    common = { }
+    for (var w in words1) {
+        common[words1[w].toLowerCase()] = true;
+    }
+    for (var w in words2) {
+        var word = words2[w].toLowerCase();
+        if (word in common) {
+            var re = new RegExp(word, "gi");
+            string1 = string1.replace(re, '<span class="matchHighlight">$&</span>');
+            string2 = string2.replace(re, '<span class="matchHighlight">$&</span>');
+        }
+    }
+    return [string1, string2];
+} 

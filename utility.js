@@ -114,7 +114,7 @@ function textValue(value) {
     if (value == undefined || value == null)
         return "";
     if (typeof value === "object"){
-        var result = value['/type/object/name'];
+        var result = value['/type/object/name'] || value['name'];
         if ($.isArray(result)) result = result[0];
         return textValue(result);
     }
@@ -521,7 +521,7 @@ function getJSON(url, params, onSuccess, onTimeout, millis) {
 
     if (location.host === "data.labs.freebase.com")
         $.post(url, params, responseHandler, "jsonp")
-    else 
+    else
         $.getJSON(url, params, responseHandler);
 }
 
